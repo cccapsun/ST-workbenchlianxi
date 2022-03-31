@@ -83,9 +83,9 @@ void PWMC_Clear(PWMC_Handle_t *pHandle)
 
 #if defined (CCMRAM)
 #if defined (__ICCARM__)
-#pragma location = ".ccmram"
-#elif defined (__CC_ARM) || defined(__GNUC__)
-__attribute__( ( section ( ".ccmram" ) ) )
+#pragma location = ".ccmram"//将函数代码数据放在指定的CCMRAM存储区内，访问速度快FLASH很多；针对IAR的语法
+#elif defined (__CC_ARM) || defined(__GNUC__)//STM32中ARM系列编译工具链的编译宏选择（__CC_ARM、__ICCARM__、__GNUC__、__TASKING__）
+__attribute__( ( section ( ".ccmram" ) ) )//针对GCC等编译器的语法
 #endif
 #endif
 /**
@@ -109,9 +109,9 @@ __weak void PWMC_GetPhaseCurrents( PWMC_Handle_t * pHandle, ab_t * Iab )
 
 #if defined (CCMRAM)
 #if defined (__ICCARM__)
-#pragma location = ".ccmram"
-#elif defined (__CC_ARM) || defined(__GNUC__)
-__attribute__( ( section ( ".ccmram" ) ) )
+#pragma location = ".ccmram"//将函数代码数据放在指定的CCMRAM存储区内，访问速度快FLASH很多；针对IAR的语法
+#elif defined (__CC_ARM) || defined(__GNUC__)//STM32中ARM系列编译工具链的编译宏选择（__CC_ARM、__ICCARM__、__GNUC__、__TASKING__）
+__attribute__( ( section ( ".ccmram" ) ) )//针对GCC等编译器的语法，特色是设置函数属性，定位函数到CCMRAM中，编译时为函数指定段
 #endif
 #endif
 /**
@@ -143,7 +143,7 @@ __weak uint16_t PWMC_SetPhaseVoltage( PWMC_Handle_t * pHandle, alphabeta_t Valfa
 {
   int32_t wX, wY, wZ, wUAlpha, wUBeta, wTimePhA, wTimePhB, wTimePhC;
 
-  wUAlpha = Valfa_beta.alpha * ( int32_t )pHandle->hT_Sqrt3;
+  wUAlpha = Valfa_beta.alpha * ( int32_t )pHandle->hT_Sqrt3;//hT_Sqrt3=2*T/sqrt(3)
   wUBeta = -( Valfa_beta.beta * ( int32_t )( pHandle->PWMperiod ) ) * 2;
 
   wX = wUBeta;
@@ -156,8 +156,8 @@ __weak uint16_t PWMC_SetPhaseVoltage( PWMC_Handle_t * pHandle, alphabeta_t Valfa
     if ( wZ < 0 )
     {
       pHandle->Sector = SECTOR_5;
-      wTimePhA = ( int32_t )( pHandle->PWMperiod ) / 4 + ( ( wY - wZ ) / ( int32_t )262144 );
-      wTimePhB = wTimePhA + wZ / 131072;
+      wTimePhA = ( int32_t )( pHandle->PWMperiod ) / 4 + ( ( wY - wZ ) / ( int32_t )262144 );//T=(PWM_PERIOD_CYCLES) / 2.，PWM_PERIOD_CYCLES=2T.
+      wTimePhB = wTimePhA + wZ / 131072;//Q15,电流采用了Q15表示（左对齐），2^15 = 32768;262144 =32768X4=Q15*4.
       wTimePhC = wTimePhA - wY / 131072;
       pHandle->lowDuty = wTimePhC;
       pHandle->midDuty = wTimePhA;
