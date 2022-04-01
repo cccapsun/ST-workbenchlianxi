@@ -148,7 +148,7 @@ __weak uint16_t PWMC_SetPhaseVoltage( PWMC_Handle_t * pHandle, alphabeta_t Valfa
 
   wX = wUBeta;
   wY = ( wUBeta + wUAlpha ) / 2;
-  wZ = ( wUBeta - wUAlpha ) / 2;
+  wZ = ( wUBeta - wUAlpha ) / 2;//设定，方便计算扇区、矢量作用时间和扇区切换时间
 
   /* Sector calculation from wX, wY, wZ */
   if ( wY < 0 )
@@ -159,7 +159,7 @@ __weak uint16_t PWMC_SetPhaseVoltage( PWMC_Handle_t * pHandle, alphabeta_t Valfa
       wTimePhA = ( int32_t )( pHandle->PWMperiod ) / 4 + ( ( wY - wZ ) / ( int32_t )262144 );//T=(PWM_PERIOD_CYCLES) / 2.，PWM_PERIOD_CYCLES=2T.
       wTimePhB = wTimePhA + wZ / 131072;//Q15,电流采用了Q15表示（左对齐），2^15 = 32768;262144 =32768X4=Q15*4.
       wTimePhC = wTimePhA - wY / 131072;
-      pHandle->lowDuty = wTimePhC;
+      pHandle->lowDuty = wTimePhC;//扇区切换时间
       pHandle->midDuty = wTimePhA;
       pHandle->highDuty = wTimePhB;
     }
