@@ -85,7 +85,7 @@ void PWMC_Clear(PWMC_Handle_t *pHandle)
 #if defined (__ICCARM__)
 #pragma location = ".ccmram"//将函数代码数据放在指定的CCMRAM存储区内，访问速度快FLASH很多；针对IAR的语法
 #elif defined (__CC_ARM) || defined(__GNUC__)//STM32中ARM系列编译工具链的编译宏选择（__CC_ARM、__ICCARM__、__GNUC__、__TASKING__）
-__attribute__( ( section ( ".ccmram" ) ) )//针对GCC等编译器的语法
+__attribute__( ( section ( ".ccmram" ) ) )//针对GCC等编译器的语法，特色是设置函数属性，定位函数到CCMRAM中，编译时为函数指定段
 #endif
 #endif
 /**
